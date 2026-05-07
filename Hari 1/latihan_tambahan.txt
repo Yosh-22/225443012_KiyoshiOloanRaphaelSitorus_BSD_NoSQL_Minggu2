@@ -1,0 +1,26 @@
+db.produksi_harian.aggregate([
+  { $group: {
+      _id: {
+        bulan: { $month: "$tanggal" },
+        tahun: { $year: "$tanggal" }
+      },
+      total_ok: { $sum: "$actual_ok" },
+      total_reject: { $sum: "$actual_reject" },
+      total_target: { $sum: "$target" },
+      total_op: { $sum: "$durasi_operasi_menit" },
+      total_avail: { $sum: "$durasi_tersedia_menit" }
+  }},
+  { $project: {
+      _id: 0,
+      bulan: "$_id.bulan",
+      tahun: "$_id.tahun",
+      OEE: {
+        $multiply: [
+          { $divide: ["$total_ok", "$total_target"] },
+          { $divide: ["$total_op", "$total_avail"] },
+          { $divide: ["$total_ok", { $add: ["$total_ok", "$total_reject"] }] }
+        ]
+      }
+  }},
+  { $sort: { tahun: 1, bulan: 1 } }
+])

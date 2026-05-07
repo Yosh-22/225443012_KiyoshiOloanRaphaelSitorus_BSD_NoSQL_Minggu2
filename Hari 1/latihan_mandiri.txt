@@ -1,0 +1,31 @@
+db.data_sensor.drop()
+var docs = []
+var start = new Date(2026, 4, 1)
+
+for (let i = 0; i < 5000; i++) {
+    var sensor = "S" + (Math.floor(Math.random() * 50) + 1).toString().padStart(3, "0")
+    
+    var nilaiSensor = Math.floor(Math.random() * 1000) / 10
+    
+    var waktu = new Date(
+        start.getTime() + Math.floor(Math.random() * 30) * 86400000
+    )
+
+    docs.push({
+        sensor_id: sensor,
+        nilai: nilaiSensor,
+        timestamp: waktu,
+        category: "suhu"
+    })
+
+    if (docs.length == 500) {
+        db.data_sensor.insertMany(docs)
+        docs = []
+    }
+}
+
+if (docs.length) {
+    db.data_sensor.insertMany(docs)
+}
+
+print("Total data: " + db.data_sensor.countDocuments())
