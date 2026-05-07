@@ -1,0 +1,1 @@
+# 225443012_KiyoshiOloanRaphaelSitorus_BSD_NoSQL_Minggu2
